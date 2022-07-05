@@ -2,7 +2,7 @@
 
 ```
 curl -i -X PUT -H "Content-Type:application/json" \
-      http://localhost:8083/connectors/sink_influx_json_01/config \
+      http://localhost:8083/connectors/sink/config \
       -d '{
           "connector.class"               : "io.confluent.influxdb.InfluxDBSinkConnector",
           "value.converter"               : "org.apache.kafka.connect.json.JsonConverter",
@@ -13,6 +13,20 @@ curl -i -X PUT -H "Content-Type:application/json" \
           "influxdb.db"                   : "my_db",
           "measurement.name.format"       : "${topic}"
       }'
+
+curl -i -X PUT -H "Content-Type:application/json" \
+      http://localhost:8083/connectors/source/config \
+      -d '{
+          "connector.class"               : "io.confluent.influxdb.source.InfluxdbSourceConnector",
+          "tasks.max"                     : 1,
+          "influxdb.url"                  : "http://localhost:8086",
+          "influxdb.db"                   : "my_db",
+          "topic.prefix"                  : "inf_",
+          "query"                         : "SELECT * FROM json_01 GROUP BY host, product"
+      }'
+
+curl localhost:8083/connectors/source/status
+curl -X DELETE localhost:8083/connectors/source
 ```
 
 ```
@@ -52,3 +66,4 @@ time                stock
 * https://rmoff.net/2020/01/23/notes-on-getting-data-into-influxdb-from-kafka-with-kafka-connect/
 * https://github.com/confluentinc/demo-scene/tree/master/influxdb-and-kafka
 * https://docs.confluent.io/kafka-connect-influxdb/current/influx-db-sink-connector/influx_d_b_sink_connector_config.html
+* https://docs.confluent.io/kafka-connect-influxdb/current/influx-db-source-connector/influx_db_source_connector_config.html
