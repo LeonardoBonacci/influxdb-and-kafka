@@ -22,7 +22,7 @@ curl -i -X PUT -H "Content-Type:application/json" \
           "influxdb.url"                  : "http://localhost:8086",
           "influxdb.db"                   : "my_db",
           "topic.prefix"                  : "inf_",
-          "query"                         : "SELECT * FROM json_01 GROUP BY host, product"
+          "query"                         : "SELECT * FROM json_01"
       }'
 
 curl localhost:8083/connectors/source/status
